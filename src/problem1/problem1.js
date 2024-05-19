@@ -1,3 +1,4 @@
+//Loop
 var sum_to_n_a = function (n) {
   //initile sum
   var sum = 0;
@@ -8,18 +9,17 @@ var sum_to_n_a = function (n) {
   return sum;
 };
 
+//Recursion
 var sum_to_n_b = function (n) {
-  //initile sum
-  var sum = 0;
-  //for loop from n to 1
-  for (var i = n; i >= 1; i--) {
-    sum += i;
-  }
-  return sum;
+  //Stop recursion
+  if (n === 1) return 1;
+
+  return n + sum_to_n_b(n - 1);
 };
 
 var sum_to_n_c = function (n) {
-  var sum = (n * (n + 1)) / 2; //formula: sum to n = (n * (n + 1)) / 2
+  //formula: sum to n = (n * (n + 1)) / 2
+  var sum = (n * (n + 1)) / 2;
   return sum;
 };
 console.log(sum_to_n_a(5));
