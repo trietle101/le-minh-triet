@@ -19,47 +19,55 @@ function App() {
   });
   const [exchangeRate, setExchangeRate] = useState("");
 
+  //Button color config
   const colors3 = ["#2b5876"];
   const getHoverColors = (colors) =>
     colors.map((color) => new TinyColor(color).lighten(5).toString());
   const getActiveColors = (colors) =>
     colors.map((color) => new TinyColor(color).darken(5).toString());
 
+  //Fetch token prices data
   async function getData() {
     const response = await fetch("https://interview.switcheo.com/prices.json");
     const data = await response.json();
     setPriceInfo(data);
   }
-
   useEffect(() => {
     getData();
   }, []);
 
   function handleSubmit() {
+    //Validate input
     if (
+      //Check if input is number
       !/^\d*\.?\d*$/.test(receivePriceInfo.amount) ||
       !/^\d*\.?\d*$/.test(sendPriceInfo.amount)
     ) {
       toast.warning("Amount must be a number");
     } else if (
+      //Check if currency is selected
       receivePriceInfo.currency === "" ||
       sendPriceInfo.currency === ""
     ) {
       toast.warning("Please provide a currency");
     } else {
       setIsLoading(true);
+      //Simulate loading from backend
       setTimeout(function () {
+        //Get send and receive currency name
         const send = priceInfo.find(
           (r) => r.currency === sendPriceInfo.currency
         );
         const receive = priceInfo.find(
           (r) => r.currency === receivePriceInfo.currency
         );
+        //Calculate exchange rate
         setExchangeRate(
           `1 ${send.currency} = ${(receive.price / send.price).toFixed(3)} ${
             receive.currency
           }`
         );
+        //If user provide receive amount
         if (receivePriceInfo.amount !== "") {
           setSendPriceInfo((prev) => ({
             ...prev,
@@ -68,7 +76,9 @@ function App() {
               receive.price
             ).toFixed(3)
           }));
-        } else if (sendPriceInfo.amount !== "") {
+        }
+        //If user provide send amount
+        else if (sendPriceInfo.amount !== "") {
           setReceivePriceInfo((prev) => ({
             ...prev,
             amount: (
@@ -77,13 +87,13 @@ function App() {
             ).toFixed(3)
           }));
         }
-        console.log(sendPriceInfo, receivePriceInfo);
         setIsLoading(false);
       }, 2000);
     }
   }
 
   function handleChange(e) {
+    //Clear another input field when user type in this field
     if (e.target.name === "send") {
       setSendPriceInfo((prev) => ({
         ...prev,
@@ -103,7 +113,6 @@ function App() {
         amount: ""
       }));
     }
-    console.log(sendPriceInfo, receivePriceInfo);
   }
   return (
     <div className="App">
@@ -119,7 +128,6 @@ function App() {
                 type="text"
                 onChange={handleChange}
                 onBlur={(e) => {
-                  console.log(e.target.value);
                   setSendPriceInfo((prev) => ({
                     ...prev,
                     amount: e.target.value

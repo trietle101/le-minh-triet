@@ -3,6 +3,7 @@
 interface WalletBalance {
   currency: string;
   amount: number;
+  //Additional property
   blockchain: string;
 }
 
